@@ -1,0 +1,8 @@
+Django>=4.2
+djangorestframework
+pyotp
+cryptography
+argon2-cffi
+python-dotenv
+dj-database-url
+psycopg2-binary

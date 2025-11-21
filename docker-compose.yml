@@ -1,0 +1,60 @@
+services:
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: securitysandbox_mailhog
+    ports:
+      - "8025:8025"   # MailHog web UI
+      - "1025:1025"   # SMTP for sending test mail
+    restart: unless-stopped
+
+  db:
+    image: postgres:15
+    container_name: securitysandbox_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: security_sandbox_db
+    volumes:
+      - securitysandbox_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: securitysandbox_backend
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend.settings
+      - EMAIL_HOST=mailhog
+      - EMAIL_PORT=1025
+      - DJANGO_DEBUG=1
+    depends_on:
+      - mailhog
+      - db
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: securitysandbox_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app           # mount source for HMR
+      - /app/node_modules         # keep node_modules from container (avoid overwriting)
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # helpful on some Windows setups
+    command: [ "npm","run","dev","--","--host","0.0.0.0" ]
+    restart: unless-stopped
+
+volumes:
+  securitysandbox_pgdata:

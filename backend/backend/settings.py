@@ -9,6 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+'''added so that Django reads .env'''
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
 
 from pathlib import Path
 
@@ -16,16 +21,34 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# Load .env (backend/.env) if present
+dotenv_path = BASE_DIR / ".env"
+if dotenv_path.exists():
+    load_dotenv(dotenv_path)
+
+# Helper to parse boolean-like env values
+def env_bool(key, default=False):
+    val = os.getenv(key)
+    if val is None:
+        return default
+    return val.lower() in ("1", "true", "yes", "on")
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kc!v6z4xpqw1g$5%3b4m_xxy901lbcwc$44x6@ehs6ro@n%!e6'
+#SECRET_KEY = 'django-insecure-kc!v6z4xpqw1g$5%3b4m_xxy901lbcwc$44x6@ehs6ro@n%!e6'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    if h.strip()
+]
 
 
 # Application definition
@@ -37,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -73,12 +97,24 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+if DATABASE_URL:
+    try:
+        import dj_database_url
+
+        DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)}
+    except Exception as e:
+        # if dj-database-url is not installed, raise helpful error
+        raise RuntimeError(
+            "dj-database-url is required when DATABASE_URL is set. Install dj-database-url."
+        )
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
 
 
 # Password validation
@@ -117,7 +153,46 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Useful for collectstatic in production; safe default for local
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
+# Email configuration (reads from .env)
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.smtp.EmailBackend"
+)
+EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 25) or 25)
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", False)
+EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", False)
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "security-sandbox@example.com")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Basic logging to console (useful during development)
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {"format": "%(levelname)s %(asctime)s %(name)s: %(message)s"}
+    },
+    "handlers": {
+        "console": {"class": "logging.StreamHandler", "formatter": "simple"}
+    },
+    "root": {"handlers": ["console"], "level": "INFO"},
+}
+
+
+# Print some config on startup when DEBUG (helpful to verify .env reading)
+if DEBUG:
+    import logging
+    logging.getLogger(__name__).info("DJANGO DEBUG mode is ON")
+    logging.getLogger(__name__).info(f"Loaded SECRET_KEY: {'(present)' if SECRET_KEY else '(missing)'}")
+    logging.getLogger(__name__).info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+    logging.getLogger(__name__).info(f"EMAIL_HOST: {EMAIL_HOST}:{EMAIL_PORT}")
+    logging.getLogger(__name__).info(f"DATABASE configured: {DATABASES['default']['ENGINE']}")
