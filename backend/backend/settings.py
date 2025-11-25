@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+from backend import accounts
+
 '''added so that Django reads .env'''
 import os
 from pathlib import Path
@@ -61,6 +63,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'backend.accounts',
+    'backend.demo',
 ]
 
 MIDDLEWARE = [
@@ -196,3 +200,10 @@ if DEBUG:
     logging.getLogger(__name__).info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
     logging.getLogger(__name__).info(f"EMAIL_HOST: {EMAIL_HOST}:{EMAIL_PORT}")
     logging.getLogger(__name__).info(f"DATABASE configured: {DATABASES['default']['ENGINE']}")
+    logger = logging.getLogger(__name__)
+    _va_root = os.getenv("VAULT_ROOT_KEY")
+    if not _va_root:
+        logger.warning(
+            "VAULT_ROOT_KEY is not set. Vault root key fallback will derive from SECRET_KEY (development only).")
+    else:
+        logger.info("VAULT_ROOT_KEY is set (hidden).")

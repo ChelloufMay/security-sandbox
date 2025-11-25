@@ -1,37 +1,23 @@
-# frontend/Dockerfile (development-friendly for Vite + React)
-FROM node:18-alpine AS deps
+# frontend/Dockerfile.dev
+FROM node:22.18.0
+
 WORKDIR /app
 
-# Install dependencies (use package-lock.json if present)
-COPY package.json package-lock.json* ./
-RUN npm ci --no-audit --no-fund
+# copy only package files first to use Docker cache
+COPY package*.json ./
 
-# ---- Dev image (fast, mounts local files for HMR) ----
-FROM node:18-alpine AS dev
-WORKDIR /app
+# install deps (npm 10.9.3 compatible)
+RUN npm ci
 
-# copy installed deps from previous stage for faster startup
-COPY --from=deps /app/node_modules ./node_modules
-
-# copy app source (when building image; for dev you'll mount the local folder)
+# copy source
 COPY . .
 
+# expose vite dev server port
 EXPOSE 5173
 
-# Run Vite dev server and bind to all interfaces so Docker host can reach it
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# allow Vite to bind to 0.0.0.0 so it's reachable from host/docker
+ENV HOST=0.0.0.0
+ENV CHOKIDAR_USEPOLLING=true
 
-# ----Production build image (multi-stage) ----
-#
-# FROM node:18-alpine AS build
-# WORKDIR /app
-# COPY package.json package-lock.json* ./
-# RUN npm ci --no-audit --no-fund
-# COPY . .
-# RUN npm run build
-#
-# FROM nginx:stable-alpine AS production
-# COPY --from=build /app/dist /usr/share/nginx/html
-# # Optionally copy your custom nginx.conf to /etc/nginx/conf.d/default.conf
-# EXPOSE 80
-# CMD ["nginx", "-g", "daemon off;"]
+# start dev server (vite) and bind to 0.0.0.0
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

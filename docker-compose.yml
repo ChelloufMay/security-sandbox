@@ -44,16 +44,16 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    container_name: securitysandbox_frontend
+      dockerfile: Dockerfile   # points to the dev Dockerfile above
+    volumes:
+      - ./frontend:/app            # sync local files for HMR
+      - /app/node_modules         # anonymous volume to avoid overwriting node_modules
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/app           # mount source for HMR
-      - /app/node_modules         # keep node_modules from container (avoid overwriting)
     environment:
-      - CHOKIDAR_USEPOLLING=true  # helpful on some Windows setups
-    command: [ "npm","run","dev","--","--host","0.0.0.0" ]
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend                    # optional: so backend starts first
     restart: unless-stopped
 
 volumes:
