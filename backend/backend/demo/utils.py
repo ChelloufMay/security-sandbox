@@ -31,14 +31,28 @@ def generate_vault_key() -> bytes:
     return base64.urlsafe_b64encode(os.urandom(32))
 
 def wrap_vault_key_with_root(vault_key_b64: bytes) -> bytes:
-    """Encrypt the vault key with root fernet and return ciphertext bytes."""
     f = root_fernet()
+    if isinstance(vault_key_b64, str):
+        vault_key_b64 = vault_key_b64.encode('utf-8')
+    else:
+        vault_key_b64 = bytes(vault_key_b64)
     return f.encrypt(vault_key_b64)
+
 
 def unwrap_vault_key_with_root(wrapped_key: bytes) -> bytes:
     """Decrypt wrapped_key with root fernet; return vault_key_b64 (bytes)."""
     f = root_fernet()
-    return f.decrypt(wrapped_key)
+
+    # Ensure we pass bytes or str to Fernet.decrypt. Django's BinaryField
+    # may return a memoryview or bytearray on some backends/drivers.
+    if isinstance(wrapped_key, str):
+        token = wrapped_key  # Fernet accepts str (urlsafe b64)
+    else:
+        # convert memoryview/bytearray/memoryview-like to bytes
+        token = bytes(wrapped_key)
+
+    return f.decrypt(token)
+
 
 def compute_next_rotation(now, rotation_period: str):
     if rotation_period == "monthly":
