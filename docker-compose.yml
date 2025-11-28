@@ -41,20 +41,20 @@ services:
       - db
     restart: unless-stopped
 
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile   # points to the dev Dockerfile above
-    volumes:
-      - ./frontend:/app            # sync local files for HMR
-      - /app/node_modules         # anonymous volume to avoid overwriting node_modules
-    ports:
-      - "5173:5173"
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    depends_on:
-      - backend                    # optional: so backend starts first
-    restart: unless-stopped
+  #frontend:
+    #build:
+      #context: ./frontend
+      #dockerfile: Dockerfile   # points to the dev Dockerfile above
+    #volumes:
+      #- ./frontend:/app            # sync local files for HMR
+      #- /app/node_modules         # anonymous volume to avoid overwriting node_modules
+    #ports:
+      #- "5173:5173"
+    #environment:
+      #- CHOKIDAR_USEPOLLING=true
+    #depends_on:
+      #- backend                    # optional: so backend starts first
+    #restart: unless-stopped
 
 volumes:
   securitysandbox_pgdata:
