@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Vite / build output
+dist/
+build/
+out/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +27,34 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
+
+# Environment variable files (local/secrets)
+.env.local
+.env.*.local
+.envrc
+.profile.d/*.sh
+
+# TypeScript
+*.tsbuildinfo
+.vscode-test/
+
+# Tests
+jest-cache/
+jest-reporters/
+
+# Parcel / caches
+.cache/
+.cache-loader/
+
+# Storybook
+storybook-static/
+
+# Optional editor temp files
+*~
+*.tmp
+*.temp
+
+# OS generated files
+ehthumbs.db
+Icon?

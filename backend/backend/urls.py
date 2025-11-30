@@ -14,20 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-""""
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('/app/backend/accounts', include('backend.accounts.urls')),
-    path('/app/backend/demo', include('backend.demo.urls')),
-]
-"""
+from backend.accounts import views
 # backend/urls.py
 from importlib import import_module
 from django.contrib import admin
 from django.urls import path, include
+
 import sys
 
 def find_include(*module_names):
@@ -59,6 +51,7 @@ urlpatterns = [
 
     # expose accounts endpoints at root -> /register/, /login/, etc.
     path('', accounts_include),
+
 ]
 
 # demo endpoints under /demo/ if available
