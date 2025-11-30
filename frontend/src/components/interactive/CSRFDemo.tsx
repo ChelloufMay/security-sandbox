@@ -40,7 +40,7 @@ export default function CSRFDemo() {
 
             <div className="mt-3 flex gap-2">
                 <button onClick={sendTest} className="btn-primary" disabled={loading}>
-                    {loading ? "Sending..." : "Send CSRF-protected POST"}
+                    {loading ? "Sending..." : "Send CSRF-protected"}
                 </button>
             </div>
 

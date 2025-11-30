@@ -1,6 +1,7 @@
 # backend/demo/urls.py
 from django.urls import path
 from . import views
+from backend.accounts import views as accounts_views
 
 urlpatterns = [
     path("symmetric/encrypt/", views.SymmetricEncryptView.as_view(), name="sym-encrypt"),
@@ -13,4 +14,6 @@ urlpatterns = [
     path("vaults/<uuid:vault_id>/rotate/", views.VaultRotateView.as_view(), name="vault-rotate"),
     path("vaults/<uuid:vault_id>/secrets/", views.VaultStoreSecretView.as_view(), name="vault-store-secret"),
     path("vaults/<uuid:vault_id>/secrets/<uuid:secret_id>/", views.VaultRetrieveSecretView.as_view(), name="vault-get-secret"),
+    path("sms/send/", accounts_views.SendSMSView.as_view(), name="demo-sms-send"),
+    path("sms/verify/", accounts_views.VerifySMSView.as_view(), name="demo-sms-verify"),
 ]

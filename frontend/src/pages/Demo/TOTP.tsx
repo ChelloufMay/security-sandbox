@@ -4,6 +4,14 @@ import { postJson } from "../../services/api";
 import { useToast } from "../../components/ToastContext";
 import { QRCodeSVG } from "qrcode.react";
 
+function extractErrorBody(err: unknown): unknown {
+    if (err && typeof err === "object" && "body" in err) {
+        // Narrow to an object that has a `body` property of unknown type
+        return (err as { body: unknown }).body;
+    }
+    return err;
+}
+
 export default function TOTPPage() {
     const [uri, setUri] = useState<string | null>(null);
     const [secret, setSecret] = useState<string | null>(null);
@@ -13,7 +21,10 @@ export default function TOTPPage() {
 
     async function setup() {
         try {
-            const res = await postJson("/totp/setup/") as { uri?: string; secret?: string } | null;
+            // If postJson is generically typed you can do:
+            // const res = await postJson<{ uri?: string; secret?: string } | null>("/totp/setup/");
+            // otherwise the cast below is fine but does not use `any`.
+            const res = (await postJson("/totp/setup/")) as { uri?: string; secret?: string } | null;
             if (res?.uri) {
                 setUri(res.uri);
                 setSecret(res.secret ?? null);
@@ -22,13 +33,15 @@ export default function TOTPPage() {
                 toast.push("Unexpected response", "error");
             }
         } catch (err: unknown) {
-            toast.push("TOTP setup failed: " + JSON.stringify((err as any)?.body ?? err), "error");
+            const body = extractErrorBody(err);
+            toast.push("TOTP setup failed: " + JSON.stringify(body ?? err), "error");
         }
     }
 
     async function verify() {
         try {
-            const res = await postJson("/totp/verify/", { code }) as { detail?: string } | null;
+            // const res = await postJson<{ detail?: string } | null>("/totp/verify/", { code });
+            const res = (await postJson("/totp/verify/", { code })) as { detail?: string } | null;
             if (res?.detail === "totp_ok") {
                 setMessage("Verified successfully");
                 toast.push("TOTP verified", "success");
@@ -37,7 +50,8 @@ export default function TOTPPage() {
                 toast.push("TOTP verify failed", "error");
             }
         } catch (err: unknown) {
-            toast.push("Verify failed: " + JSON.stringify((err as any)?.body ?? err), "error");
+            const body = extractErrorBody(err);
+            toast.push("Verify failed: " + JSON.stringify(body ?? err), "error");
         }
     }
 
@@ -54,7 +68,12 @@ export default function TOTPPage() {
                     <div className="mt-2 text-sm text-gray-600">Secret: <code className="break-all">{secret}</code></div>
 
                     <div className="mt-3">
-                        <input value={code} onChange={(e)=>setCode(e.target.value)} placeholder="Enter code from app" className="w-full border rounded p-2" />
+                        <input
+                            value={code}
+                            onChange={(e) => setCode(e.target.value)}
+                            placeholder="Enter code from app"
+                            className="w-full border rounded p-2"
+                        />
                         <div className="mt-2">
                             <button onClick={verify} className="btn-primary">Verify</button>
                         </div>

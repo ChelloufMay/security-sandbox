@@ -18,7 +18,7 @@ export default function SMSInteractive() {
         if (!phone) { toast.push("Enter phone", "error"); return; }
         setLoading(true);
         try {
-            const res = await postJson("/sms/send/", { phone }) as unknown;
+            const res = await postJson("/demo/sms/send/", { phone }) as unknown;
             // try to pick token_id from response safely
             const body = res as Record<string, unknown> | null;
             const tid = body && typeof body.token_id === "string" ? body.token_id : null;
@@ -34,7 +34,7 @@ export default function SMSInteractive() {
         if (!token) { toast.push("Please enter the code from Inbox", "error"); return; }
         setLoading(true);
         try {
-            const res = await postJson("/sms/verify/", { token }) as unknown;
+            const res = await postJson("/demo/sms/verify/", { token }) as unknown;
             const body = res as Record<string, unknown> | null;
             if (body && (body.detail === "sms_verified" || body.detail === "verified")) {
                 toast.push("SMS verified ✅", "success");
@@ -57,7 +57,7 @@ export default function SMSInteractive() {
             <div className="mt-3 flex gap-2">
                 <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+216..." className="border rounded p-2" />
                 <button onClick={sendSMS} className="btn-primary" disabled={loading}>Send</button>
-            </div>
+            </div> <br></br>
 
             <div className="mt-3">
                 <input value={token} onChange={(e) => setToken(e.target.value)} placeholder="Enter code" className="border rounded p-2 w-48" />

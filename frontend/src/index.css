@@ -7,7 +7,8 @@
     --primary-500: #0ea5e9;
     --primary-700: #0369a1;
     --muted: #64748b;
-    --page-bg: #f1f8fc;
+    /* slightly more bluish page background (just a small nudge) */
+    --page-bg: #ecf7ff;
     --card-bg: #ffffff;
 }
 
@@ -46,6 +47,112 @@ body{
     padding: 1.25rem;
     box-shadow: 0 8px 20px rgba(2,6,23,0.03);
 }
+
+/* ---------- New: global form/input styles (applies across the app) ---------- */
+
+/* sensible default for form controls inside card or forms */
+.form-card input,
+.form-card textarea,
+.form-card select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"] {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    outline: none;
+    transition: box-shadow .12s ease, border-color .12s ease, transform .06s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* focus state — subtle, no loud color */
+.form-card input:focus,
+.form-card textarea:focus,
+.form-card select:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus {
+    border-color: var(--primary-700);
+    box-shadow: 0 6px 18px rgba(3,105,161,0.06);
+    transform: translateY(-1px);
+}
+
+/* textarea sizing */
+.form-card textarea { min-height: 100px; resize: vertical; }
+
+/* spacing between form fields — global */
+.form-card .form-field,
+.form-card input,
+.form-card textarea,
+.form-card select {
+    margin-bottom: 0.85rem;
+}
+
+/* wrapper utility (optional, use in markup if present) */
+.form-field label { display:block; margin-bottom:0.35rem; font-weight:600; color: #0f172a; font-size:0.95rem; }
+
+/* actions area — groups buttons neatly with a gap */
+.form-card .form-actions,
+.form-actions {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    margin-top: 0.65rem;
+    flex-wrap: wrap;
+}
+
+/* ensure single buttons don't collapse height */
+.btn-primary, .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .08s ease, box-shadow .12s ease;
+    height: 40px;
+}
+
+/* hover affordances */
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(2,6,23,0.04); }
+.btn-outline:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(2,6,23,0.03); }
+
+/* keep visual weight for outline button */
+.btn-outline {
+    border: 1px solid rgba(2,6,23,0.06);
+    background: transparent;
+}
+
+/* small helper — center small inputs inline (e.g. code inputs) */
+.form-inline { display:flex; gap:0.6rem; align-items:center; }
+
+/* make QR/code area stand out slightly without adding color */
+.form-card .qr-box {
+    background: #fff;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid rgba(2,6,23,0.04);
+    display: inline-block;
+}
+
+/* smaller text helpers */
+.form-note { font-size:0.875rem; color: var(--muted); }
+
+/* ---------- End new form styles ---------- */
 
 /* feature selection grid */
 .features-grid { display:grid; grid-template-columns:repeat(1,1fr); gap:1rem; }
@@ -88,3 +195,4 @@ body{
     .page-grid { flex-direction:column; }
     .page-sidebar { position:relative; width:auto; }
 }
+
