@@ -9,111 +9,119 @@ export type FeatureDef = {
 export const FeaturesContent: Record<string, FeatureDef> = {
     csrf: {
         title: "CSRF (demo)",
-        whatIs: "Cross-Site Request Forgery: we demonstrate using the CSRF token and how requests are protected. " +
-            " Prevents an attacker from making authenticated requests (via victim’s browser cookies) to your site from another origin.",
-        whatDoes: "Requiring a token tied to the user’s session stops cross-site forms or scripts from performing state-changing actions.",
+        whatIs: "CSRF est une attaque où un site malveillant essaie d’utiliser votre navigateur pour envoyer des actions à votre place, sans votre accord.",
+        whatDoes:  "Un jeton spécial (CSRF token) est ajouté aux requêtes. Si le jeton est absent ou incorrect, l’action est refusée.",
         steps: [
-            "Ensure you are logged in (session cookie).",
-            "Click 'Send CSRF-protected POST' to attempt a protected request; the UI will include X-CSRFToken header automatically."
+            "Étant donné que vous êtes connecté, vous disposez automatiquement d'un (cookie de session ).",
+            "Quand vous cliquez sur le bouton, la requête vers (http://127.0.0.1:8000/sanctum/csrf-cookie) demande au serveur de créer et d’envoyer un cookie CSRF au navigateur afin que les prochaines requêtes puissent être vérifiées et protégées."
         ],
-        notes: "-Limits in this project-->\n\n" +
-            "If the SPA doesn’t reliably get/set the csrftoken cookie (or initial view doesn’t set it), CSRF protection may be bypassed or broken in dev. Also CSRF defends browser-based attacks — it’s not a substitute for auth checks or CORS configuration.\n\n"
+        notes: `-Limites dans ce projet: 
+        La protection CSRF peut ne pas fonctionner correctement si l’application ne récupère pas bien le cookie csrftoken.
+        + Cette protection fonctionne seulement contre les attaques via navigateur.
+        + Elle ne remplace pas la vérification de connexion ou la configuration CORS.`
     },
     email: {
-        title: "Email MFA (already used during register)",
-        whatIs: "Email-based multi-factor authentication (6-digit code).",
-        whatDoes: "Registration triggers email send, MailHog captures it. Use Verify screen to paste code and finish. --> Verifies ownership of the email address and adds an extra step to prevent account takeover if the attacker doesn’t have access to the mailbox.",
+        title: "Email MFA (utiliser lors de la sign in)",
+        whatIs: "Email-based multi-factor authentication (6-digit code): Une sécurité supplémentaire qui envoie un code à votre adresse e-mail.",
+        whatDoes: "L’inscription déclenche l’envoi d’un e-mail, capturé par MailHog. Utilisez l’écran de vérification pour coller le code et finaliser. --> Vérifie la possession de l’adresse e-mail et ajoute une étape supplémentaire pour empêcher la prise de contrôle du compte si l’attaquant n’a pas accès à la boîte mail.",
         steps: [
-            "Register with username/email/password.",
-            "Open MailHog (http://localhost:8025) and copy the 6-digit code.",
-            "Paste code into Verify screen and confirm."
+            "S’inscrire avec nom d’utilisateur / e-mail / mot de passe.",
+            "Ouvrir MailHog (http://localhost:8025) et copier le code à 6 chiffres.",
+            "Coller le code dans l’écran de vérification et confirmer."
         ],
-        notes: "-Limits in this project-->\n\n" +
-            "Implementation is simulated using MailHog / InboxMessage. Tokens are short numeric codes which have lower entropy than some other factors. There is no rate-limiting or lockout, and messages are visible in the dev inbox."
+        notes: `-Limites dans ce projet:
+        L’implémentation est simulée à l’aide de MailHog / InboxMessage.
+        + Les jetons sont de courts codes numériques ayant une entropie plus faible que certains autres facteurs.
+        + Il n’y a ni limitation de tentatives ni verrouillage, et les messages sont visibles dans la boîte de réception de développement.`
     },
     sms: {
-        title: "SMS (simulated)",
-        whatIs: "Simulated SMS verification using the backend Inbox and token storage.",
-        whatDoes: "Send an SMS token (simulated) and verify it.--> Verifies possession of a phone number; second factor increases account security.",
-        steps: ["Send SMS using the Send button.", "Open Inbox to read token and use Verify to confirm it."],
-        notes:
-            "- Limits in this project-->\n\n" +
-            "SMS delivery is simulated and not secure against real-world threats (SIM swap, SS7). The demo stores tokens in the inbox; do not do this in production."
+        title: "SMS",
+        whatIs: "Vérification SMS simulée à l’aide de la boîte de réception backend et du stockage de jetons.",
+        whatDoes: "Envoi d’un jeton SMS (simulé) et vérification. --> Vérifie la possession d’un numéro de téléphone ; le second facteur renforce la sécurité du compte.",
+        steps: [
+            "Envoyer un SMS en utilisant le bouton Send.",
+            "Ouvrir Inbox pour lire le jeton et utiliser Verify pour le confirmer."],
+        notes: `-Limites dans ce projet:
+        La livraison SMS est simulée et n’est pas sécurisée contre les menaces réelles (SIM swap, SS7).
+        + La démo stocke les jetons dans la boîte de réception ; ne pas faire cela en production.`
     },
     totp: {
         title: "TOTP",
-        whatIs: "Time-based One-Time Password for 2FA.",
-        whatDoes: "Setup secret, scan QR, verify code from authenticator app.-->Provides a phishing-resistant second factor (compared to SMS), requires possession of secret on authenticator device.",
-        steps: ["Setup secret", "Scan QR", "Verify the code in the app"],
-        notes:
-            "-Limits in this project-->\n\n" +
-            "TOTP secrets are stored on user.profile (likely plaintext in DB). There are no backup codes, no recovery flow, and no brute-force rate limit on verification in the demo."
+        whatIs: "Mot de passe à usage unique basé sur le temps pour l’authentification à deux facteurs (2FA).",
+        whatDoes: "Configurer un secret, scanner le QR code, vérifier le code depuis une application d’authentification. --> Fournit un second facteur plus résistant au phishing (comparé au SMS) et nécessite la possession du secret sur l’appareil d’authentification.",
+        steps: ["Configurer le secret", "Scanner le QR code", "Vérifier le code dans l’application"],
+        notes:`-Limites dans ce projet:
+        Il n’y a pas de codes de secours, pas de procédure de récupération et pas de limitation contre le brute-force lors de la vérification dans la démo.`
     },
     "hash-info": {
         title: "Password hash info",
-        whatIs: "Compute an Argon2 hash on the backend and measure the time.",
-        whatDoes: "Send a password to /password/hash-info/ to see a generated hash and elapsed time.-->Demonstrates the use of memory-hard hashing (Argon2) that defends against offline cracking and encourages using slow hashes for passwords.",
-        steps: ["Enter a password", "Click 'Hash' to send to backend", "See resulting hash + time (ms)"],
+        whatIs: "Calcul d’un hachage Argon2 côté backend et mesure du temps.",
+        whatDoes: "Envoie un mot de passe vers /password/hash-info/ pour afficher le hachage généré et le temps écoulé. --> Démontre l’utilisation d’un hachage gourmand en mémoire (Argon2) qui protège contre le cassage hors ligne et encourage l’utilisation de hachages lents pour les mots de passe.",
+        steps: [
+            "Saisir un mot de passe",
+            "Cliquer sur « Hash » pour l’envoyer au backend",
+            "Voir le hachage résultant et le temps (ms)"
+        ],
         notes:
-            "- Limits in this project-->\n\n" +
-            "This endpoint is educational — it must be rate-limited and not exposed publicly in production since computing Argon2 is CPU/memory intensive and returning hashes of arbitrary input is dangerous."
+            `-Limites dans ce projet:
+        Ce point d’accès est éducatif, il doit être limité en nombre de requêtes et ne pas être exposé publiquement en production, car le calcul d’Argon2 est coûteux en CPU/mémoire et retourner des hachages d’entrées arbitraires est dangereux.`
     },
 
     rbac: {
         title: "RBAC (Role Requests)",
-        whatIs: "Request a role and — if you are admin — approve role requests.-->Limits privilege assignment to admins and allows temporary elevation controls in demo.",
-        whatDoes: "User can request a role. Admins can approve by providing request ID (demo).",
+        whatIs: "Demander un rôle et — si vous êtes administrateur — approuver les demandes de rôles. --> Limite l’attribution des privilèges aux administrateurs et permet un contrôle d’élévation temporaire dans la démo.",
+        whatDoes: "L’utilisateur peut demander un rôle. Les administrateurs peuvent approuver en fournissant l’ID de la demande.",
         steps: [
-            "Request a role (e.g., 'admin' or 'moderator').",
-            "If you are admin, approve a request by its ID (returned on creation)."
+            "Demander un rôle (par ex. « admin » ou « moderator »).",
+            "Copier le (role request id ) pour que la demande soit accepter."
         ],
-        notes:
-            "-Limits in this project-->\n\n" +
-            "Demo logic has an admin-check bug: missing profile could bypass admin check. In production, role assignment must be strictly enforced and audited."
     },
     logs: {
         title: "View logs",
-        whatIs: "View recent application events created by the backend.",
-        whatDoes: "Fetches /logs/ and displays the latest events.-->Keeps an audit trail to investigate incidents and detect anomalies.",
-        steps: ["Click 'Refresh logs' to load the last 200 events."],
-        notes:
-            "-Limits in this project-->\n\n" +
-            "Logs are returned to any authenticated user in the demo — restrict log viewing to auditors/admins and redact sensitive data in production."
+        whatIs: "Afficher les événements récents de l’application générés par le backend.",
+        whatDoes: "Récupère /logs/ et affiche les derniers événements. --> Conserve une trace d’audit pour enquêter sur les incidents et détecter les anomalies.",
+        steps: ["Cliquer sur « Refresh logs » pour charger les 200 derniers événements."],
     },
     "symmetric": {
         title: "Symmetric (AES-GCM)",
-        whatIs: "Authenticated symmetric encryption using AES-GCM.",
-        whatDoes: "Encrypt plaintext and decrypt it using returned key+nonce.",
+        whatIs: "Chiffrement symétrique authentifié utilisant AES-GCM.",
+        whatDoes: "Chiffre un texte en clair et le déchiffre à l’aide de la clé et du nonce retournés.",
         steps: ["Encrypt", "Decrypt"],
         notes:
-            "-Limits in this project-->\n\n" +
-            "Demo-level symmetric encryption is fine for learning; production must use authenticated encryption and proper key storage (KMS/HSM)."
+            `-Limites dans ce projet:
+        Le chiffrement symétrique au niveau démo est adapté à l’apprentissage ; en production, il faut utiliser un chiffrement authentifié et un stockage de clés approprié (KMS/HSM).`
     },
     rsa: {
         title: "RSA (sign/verify)",
-        whatIs: "Asymmetric signing and verification demo.",
-        whatDoes: "Generate keys, sign and verify messages.-->Symmetric keys encrypt secret blobs; RSA can be used to protect keys (wrap/unwrap) or sign things.",
+        whatIs: "Démonstration de signature et de vérification asymétriques.",
+        whatDoes: "Générer des clés, signer et vérifier des messages. --> Les clés symétriques chiffrent les données secrètes ; RSA peut être utilisé pour protéger des clés (wrap/unwrap) ou signer des éléments.",
         steps: ["Generate keys", "Sign", "Verify"],
         notes:
-            "-Limits in this project-->\n\n" +
-            "If RSA keys are stored or generated insecurely, it undermines the demo. Use secure key handling and modern curve algorithms where possible (ECDSA/Ed25519) in production."
+            `-Limites dans ce projet:
+        Si les clés RSA sont stockées ou générées de manière non sécurisée, cela compromet la démo. En production, utiliser une gestion sécurisée des clés et des algorithmes modernes basés sur des courbes (ECDSA / Ed25519).`
     },
     vaults: {
         title: "Vaults",
-        whatIs: "Create vaults, store secrets, retrieve and rotate keys.",
-        whatDoes: "Managed/unmanaged vaults and secrets stored via the vault key.-->Demonstrates symmetric encryption concepts, key rotation, and secret storage inside an access-controlled service.",
-        steps: ["Create vault", "Store secret", "Retrieve secret", "Rotate vault"],
+        whatIs: "Créer des coffres-forts, stocker des secrets, récupérer et faire tourner les clés.",
+        whatDoes: "Coffres-forts gérés / non gérés et secrets stockés via la clé du coffre. --> Démontre les concepts de chiffrement symétrique, de rotation de clés et de stockage de secrets dans un service à accès contrôlé.",
+        steps: [
+            "Créer un coffre",
+            "Stocker un secret",
+            "Récupérer un secret",
+            "Faire tourner le coffre (optionnel)"
+        ],
         notes:
-            "-Limits in this project-->\n\n" +
-            "Vault keys and secrets in the demo are not managed by a KMS/HSM and may be stored in DB. Production secret managers should use envelope encryption, audited access, and hardware-backed key stores."
+            `-Limites dans ce projet:
+        Dans la démo, les clés et secrets ne sont pas gérés par un KMS/HSM et peuvent être stockés en base de données. En production, les gestionnaires de secrets doivent utiliser le chiffrement par enveloppe, des accès audités et des stockages de clés matériels.`
     },
     inbox: {
-        title: "Inbox",
-        whatIs: "View demo Inbox messages (email + sms); MailHog captures emails.",
-        whatDoes: "List messages, filter by email or sms, copy message body.-->Makes it easy to view messages in the UI during development without relying on external services.",
-        steps: ["Open Inbox", "Filter by type", "Copy or inspect message body"],
-        notes:
-            "-Limits in this project-->\n\n" +
-            "Inbox is convenient in dev but storing tokens/messages in plain DB and exposing them to unauthenticated users is insecure. In production, limit access and avoid storing sensitive codes in readable form."
+        title: "Inbox (Boîte de réception)",
+        whatIs: "Afficher les messages de démonstration Inbox (e-mail + SMS) ; MailHog capture les e-mails.",
+        whatDoes: "Lister les messages, filtrer par e-mail ou SMS, copier le contenu. --> Facilite la consultation des messages dans l’interface pendant le développement sans dépendre de services externes.",
+        steps: [
+            "Ouvrir Inbox",
+            "Filtrer par type",
+            "Copier ou inspecter le contenu du message"
+        ],
     }
 };

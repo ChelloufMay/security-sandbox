@@ -26,7 +26,6 @@ export default function HashInfoInteractive() {
     return (
         <div className="form-card">
             <h3 className="font-semibold">Password hash (Argon2) info</h3>
-            <p className="text-sm text-gray-600">Send a password to the backend to compute an Argon2 hash and measure time.</p>
 
             <div className="mt-3">
                 <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Password" className="border rounded p-2 w-full" />

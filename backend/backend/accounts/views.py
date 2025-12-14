@@ -13,6 +13,8 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from rest_framework.throttling import UserRateThrottle
+
 
 import pyotp
 from argon2 import PasswordHasher
@@ -121,6 +123,7 @@ class SendSMSView(APIView):
     Simulate sending SMS by creating an InboxMessage of type 'sms' and creating a verification token.
     """
     permission_classes = [permissions.IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
     def post(self, request):
         phone = request.data.get('phone')
         if not phone:
@@ -137,10 +140,12 @@ class SendSMSView(APIView):
 
 class VerifySMSView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
     def post(self, request):
         token = request.data.get('token')
         if not token:
             return Response({"error":"token_required"}, status=status.HTTP_400_BAD_REQUEST)
+        token = token.strip()
         # find latest sms token for this user
         try:
             vt = VerificationToken.objects.filter(user=request.user, type='sms').latest('created_at')

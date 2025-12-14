@@ -10,7 +10,7 @@ export default function Features() {
         <div className="container py-10">
             <div className="hero mx-auto max-w-3xl">
                 <h1 className="mb-3">Choose a security feature</h1>
-                <p className="text-sm text-gray-600 mb-6">Click a feature to open its page. The header only contains logout (far right).</p>
+                <p className="text-sm text-gray-600 mb-6">Cliquez sur une fonctionnalité pour ouvrir sa page. L'en-tête ne contient que l'option de déconnexion (à l'extrême droite).</p>
 
                 <div className="form-card">
                     <div className="features-grid">

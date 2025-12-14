@@ -62,13 +62,23 @@ export default function RBACInteractive() {
     return (
         <div className="form-card">
             <h3 className="font-semibold">RBAC (request a role / approve)</h3>
-            <p className="text-sm text-gray-600">Request a role. Admins approve by entering the request id below.</p>
+            <p className="text-sm text-gray-600 mb-2">
+                Demande de rôle. Les administrateurs approuvent la demande en saisissant l'identifiant ci-dessous.
+            </p>
+            <div className="p-2 bg-blue-50 text-xs text-blue-800 rounded mb-3">
+                <strong>Demo Info:</strong>
+                <ul className="list-disc ml-4 mt-1">
+                    <li>TCette démonstration simule le<em>processus</em> de demande et d'approbation des rôles.</li>
+                    <li><strong>Admin:</strong> Peut approuver les demandes.</li>
+                    <li><strong>Operator (Moderator):</strong> Dans une application réelle, elle permet la modération du contenu.</li>
+                </ul>
+                <strong>Demander le rôle d’« administrateur » ou d’« opérateur » ici ne vous accorde pas de véritables privilèges de superutilisateur backend dans cet environnement sandbox (mesure de sécurité), mais met à jour votre rôle de profil pendant 15 minutes.</strong>
+            </div>
 
             <div className="mt-3 flex gap-2 items-center">
                 <select value={role} onChange={(e) => setRole(e.target.value)} className="border rounded p-2">
                     <option value="admin">admin</option>
-                    <option value="moderator">moderator</option>
-                    <option value="user">user</option>
+                    <option value="operator">moderator (operator)</option>
                 </select>
                 <button onClick={requestRole} className="btn-primary" disabled={loading}>Request role</button>
             </div>
@@ -82,7 +92,7 @@ export default function RBACInteractive() {
                     <button onClick={approve} className="btn-outline" disabled={loading}>Approve</button>
                 </div>
                 <div className="mt-2 text-sm text-gray-500">
-                    After approval, the user's Profile.role is set on the server for the demo expiry time (15 minutes). Check Logs → Refresh to confirm.
+                    Après validation, le rôle de l'utilisateur est défini sur le serveur pour la durée de la démo (15 minutes).  Check Logs → Refresh to confirm.
                 </div>
             </div>
 

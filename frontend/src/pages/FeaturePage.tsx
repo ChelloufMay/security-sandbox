@@ -34,9 +34,9 @@ export default function FeaturePage() {
             case "rsa": return <RSADemo />;
             case "vaults": return <VaultsPage />;
             case "email": // email is covered by register/verify flow; show simple note
-                return <div className="form-card">This project uses email MFA during registration. Use Register → Verify flows to exercise it.</div>;
+                return <div className="form-card">Ce projet utilise l'authentification multifacteur par courriel lors de l'inscription. Utilisez la fonction « S'inscrire » → « Vérifier les flux » pour la tester..</div>;
             default:
-                return <div className="form-card">Interactive demo not implemented for this feature yet.</div>;
+                return <div className="form-card">Démonstration interactive non encore implémentée pour cette fonctionnalité.</div>;
         }
     }
 

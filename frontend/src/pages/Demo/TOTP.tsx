@@ -39,6 +39,11 @@ export default function TOTPPage() {
     }
 
     async function verify() {
+        setMessage(null);
+        if (!code.trim()) {
+            setMessage("Please enter a code (cannot be empty)");
+            return;
+        }
         try {
             // const res = await postJson<{ detail?: string } | null>("/totp/verify/", { code });
             const res = (await postJson("/totp/verify/", { code })) as { detail?: string } | null;
@@ -51,7 +56,9 @@ export default function TOTPPage() {
             }
         } catch (err: unknown) {
             const body = extractErrorBody(err);
-            toast.push("Verify failed: " + JSON.stringify(body ?? err), "error");
+            const msg = JSON.stringify(body ?? err);
+            setMessage("Error: " + msg);
+            toast.push("Verify failed: " + msg, "error");
         }
     }
 

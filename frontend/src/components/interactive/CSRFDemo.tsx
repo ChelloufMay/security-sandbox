@@ -34,9 +34,6 @@ export default function CSRFDemo() {
     return (
         <div className="form-card">
             <h3 className="font-semibold">CSRF demo</h3>
-            <p className="text-sm text-gray-600">
-                This will POST to <code>/password/hash-info/</code> with X-CSRFToken (if cookie present).
-            </p>
 
             <div className="mt-3 flex gap-2">
                 <button onClick={sendTest} className="btn-primary" disabled={loading}>

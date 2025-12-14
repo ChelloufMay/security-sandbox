@@ -17,8 +17,6 @@ export default function FeatureSidebar({ currentKey }: { currentKey?: string }) 
 
                 <div className="sidebar-footer">
                     <Link to="/features" className="sidebar-link">Back to features</Link>
-                    <div style={{ height: 8 }} />
-                    <Link to="/" className="sidebar-link">Logout</Link>
                 </div>
             </div>
         </aside>

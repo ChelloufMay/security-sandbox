@@ -7,18 +7,18 @@ export default function Home() {
             <div className="hero mx-auto max-w-3xl">
                 <h1>Security Sandbox</h1>
                 <p>
-                    Interactive local sandbox demonstrating common security features:
+                    Environnement de test local interactif présentant des fonctionnalités de sécurité courantes:
                     email verification, TOTP, symmetric/asymmetric crypto, vaults and RBAC.
-                    Use these demos to learn how these features work end-to-end.
+                    Utilisez ces démonstrations pour découvrir comment ces fonctionnalités fonctionnent de bout en bout.
                 </p>
 
-                <div className="mt-6 flex justify-center gap-4">
+                <div className="mt-6 flex flex-col justify-center gap-4">
                     <Link to="/register" className="btn-primary">Sign up</Link>
                     <Link to="/login" className="btn-outline">Log in</Link>
                 </div>
 
                 <div className="mt-6 text-sm text-gray-600">
-                    Tip: Emails are captured by MailHog (http://localhost:8025). Start by creating an account.
+                    <strong>Tip:</strong>  Les adresses e-mail sont capturées par MailHog (http://localhost:8025). Commencez par créer un compte.
                 </div>
             </div>
         </div>

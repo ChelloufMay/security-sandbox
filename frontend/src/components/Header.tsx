@@ -14,7 +14,7 @@ export default function Header() {
 
     return (
         <header className="app-header">
-            <div className="container flex items-center justify-between py-4">
+            <div className="container-header flex items-center justify-between py-4">
                 <div className="flex items-center gap-3">
                     <Link to="/" className="flex items-center gap-3 no-underline">
                         <div className="app-logo">SS</div>

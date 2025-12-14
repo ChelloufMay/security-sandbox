@@ -4,11 +4,11 @@
 
 /* theme tokens */
 :root {
-    --primary-500: #0ea5e9;
-    --primary-700: #0369a1;
-    --muted: #64748b;
+    --primary-500: #e90ec5;
+    --primary-700: #014b73;
+    --muted: #4b596a;
     /* slightly more bluish page background (just a small nudge) */
-    --page-bg: #ecf7ff;
+    --page-bg: #fff4fb;
     --card-bg: #ffffff;
 }
 
@@ -17,15 +17,16 @@ html,body,#root { height:100%; }
 body{
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     background: var(--page-bg);
-    color: #0f172a;
+    color: #07122c;
     -webkit-font-smoothing:antialiased;
 }
 
 /* container */
-.container { max-width:1100px; margin-left:auto; margin-right:auto; padding-left:1rem; padding-right:1rem; }
+.container { max-width:1100px; margin-left:auto; margin-right:auto; padding-left:1rem; padding-right:1rem; margin-top: 1rem; margin-bottom: 1rem;}
+.container-header { max-width:1100px; margin-left:auto; margin-right:auto; padding-left:1rem; padding-right:1rem;}
 
 /* header */
-.app-header { background: white; border-bottom: 1px solid rgba(15,23,42,0.06); }
+.app-header { background: white; border-bottom: 1px solid rgb(0, 69, 158); }
 .app-logo { width:46px; height:46px; border-radius:10px; background:var(--primary-500); display:flex; align-items:center; justify-content:center; color: #fff; font-weight:700; }
 
 /* hero on home / features */
@@ -34,7 +35,7 @@ body{
     border-radius: 12px;
     padding: 2.25rem;
     text-align:center;
-    box-shadow: 0 8px 26px rgba(2,6,23,0.03);
+    box-shadow: 0 8px 26px rgb(60, 57, 57);
 }
 .hero h1 { font-size: clamp(28px, 4vw, 48px); color: var(--primary-700); margin-bottom:0.5rem; font-weight:700; }
 .hero p { color: var(--muted); margin-bottom:1.25rem; }
@@ -45,7 +46,7 @@ body{
     border: 1px solid rgba(2,6,23,0.06);
     border-radius: 12px;
     padding: 1.25rem;
-    box-shadow: 0 8px 20px rgba(2,6,23,0.03);
+    box-shadow: 0 8px 20px rgb(184, 181, 181);
 }
 
 /* ---------- New: global form/input styles (applies across the app) ---------- */
@@ -129,11 +130,11 @@ input[type="number"]:focus {
 
 /* hover affordances */
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(2,6,23,0.04); }
-.btn-outline:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(2,6,23,0.03); }
+.btn-outline:hover { transform: translateY(-2px); box-shadow: 0 8px 26px rgb(213, 208, 208); }
 
 /* keep visual weight for outline button */
 .btn-outline {
-    border: 1px solid rgba(2,6,23,0.06);
+    border: 1px solid rgba(23, 16, 2, 0.06);
     background: transparent;
 }
 
@@ -162,11 +163,11 @@ input[type="number"]:focus {
 /* feature button */
 .feature-btn {
     display:flex; align-items:center; justify-content:center;
-    height:64px; border-radius:10px; background:linear-gradient(180deg,#e6f8ff,#dff6ff);
-    color:var(--primary-700); font-weight:600; border:1px solid rgba(3,105,161,0.06);
+    height:64px; border-radius:10px; background:linear-gradient(180deg, #ffffff, #ff87c2);
+    color:var(--primary-700); font-weight:600; border:1px solid rgb(84, 143, 220);
     transition: transform .12s, box-shadow .12s;
 }
-.feature-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(2,6,23,0.06); }
+.feature-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgb(128, 127, 127); }
 
 /* page-grid for feature pages (left menu + content) */
 .page-grid{ display:flex; gap:1.5rem; align-items:flex-start; }
@@ -188,7 +189,7 @@ input[type="number"]:focus {
 
 /* small helpers */
 .btn-primary { background:var(--primary-500); color:white; padding:0.5rem 1rem; border-radius:8px; }
-.btn-outline { border:1px solid rgba(2,6,23,0.06); padding:0.45rem 0.8rem; border-radius:8px; }
+.btn-outline { border:1px solid rgb(2, 71, 163); padding:0.45rem 0.8rem; border-radius:8px; }
 
 /* responsive adjustments */
 @media (max-width: 900px) {
