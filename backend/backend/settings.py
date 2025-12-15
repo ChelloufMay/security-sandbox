@@ -91,7 +91,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # vite default port
-    "http://localhost:5174"   # your reported port
+    "http://localhost:5174",   # your reported port
+    "https://security-sandbox.test"
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = False
@@ -99,6 +100,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://security-sandbox.test",
 ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
@@ -219,6 +221,7 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": "INFO"},
 }
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Print some config on startup when DEBUG (helpful to verify .env reading)
 if DEBUG:

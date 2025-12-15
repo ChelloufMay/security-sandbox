@@ -10,6 +10,11 @@ function readCookie(name: string): string | null {
 }
 
 export async function apiFetch(path: string, opts: RequestInit = {}) {
+    if (!path.startsWith("http")) {
+        // ensure leading slash on relative path
+        if (!path.startsWith("/")) path = `/${path}`;
+    }
+
     const url = path.startsWith("http") ? path : `${API_BASE.replace(/\/$/, "")}${path}`;
     const headers = new Headers(opts.headers ?? {});
     // if body present and content-type missing, assume JSON

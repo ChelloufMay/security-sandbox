@@ -4,6 +4,9 @@ FROM python:3.11-slim
 # set workdir
 WORKDIR /app
 
+# Keep layer small + avoid cache leftover
+ENV PYTHONUNBUFFERED=1
+
 # install system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
@@ -13,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # copy requirements if you have one; otherwise install common libs
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip
-RUN pip install -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # copy project
 COPY . /app
