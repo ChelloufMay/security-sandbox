@@ -1,6 +1,6 @@
 # Security Sandbox
 
-Security Sandbox is a learning-oriented web application designed to simulate and demonstrate common security mechanisms similar to those used in Microsoft Azure, in a safe local environment. Its purpose is to help understand how modern security concepts—such as HTTPS/TLS termination, authentication flows, CSRF protection, role-based access control, secure cookies, email/SMS-based verification, and reverse-proxy architectures—work together in real-world systems. By combining a Dockerized Django backend, a Vite + React frontend, and an HTTPS entrypoint using mkcert and nginx, the project mirrors Azure-style setups (App Gateway / Front Door, managed identities, secure networking) while remaining fully local, transparent, and educational.
+Security Sandbox is a learning-oriented web application designed to simulate and demonstrate common security mechanisms similar to those used in Microsoft Azure, in a safe local environment. Its purpose is to help understand how modern security concepts such as HTTPS/TLS termination, authentication flows, CSRF protection, role-based access control, secure cookies, email/SMS-based verification, and reverse-proxy architectures work together in real-world systems. By combining a Dockerized Django backend, a Vite + React frontend, and an HTTPS entrypoint using mkcert and nginx, the project mirrors Azure-style setups (App Gateway / Front Door, managed identities, secure networking) while remaining fully local, transparent, and educational.
 
 ---
 
@@ -13,7 +13,7 @@ Security Sandbox is a learning-oriented web application designed to simulate and
 * **Dev modes:**
 
   * **Mode A (fast):** Vite dev server (`http://localhost:5173`) + Django exposed at `http://localhost:8000` (useful for quick dev and debugging)
-  * **Mode B (recommended):** HTTPS entrypoint `https://security-sandbox.test` served by nginx (mkcert certs) — same-origin for frontend and backend, no CORS, simulates production HTTPS
+  * **Mode B (recommended):** HTTPS entrypoint `https://security-sandbox.test` served by nginx (mkcert certs)   same-origin for frontend and backend, no CORS, simulates production HTTPS
 
 ---
 
@@ -36,8 +36,8 @@ security-sandbox/
 
 * Docker & Docker Compose (Docker Desktop on Windows is recommended)
 * Node.js + npm/yarn (for frontend)
-* Python (for local scripts if you run Django outside Docker) — optional
-* **mkcert** (for local trusted certs on Windows) — [https://github.com/FiloSottile/mkcert](https://github.com/FiloSottile/mkcert)
+* Python (for local scripts if you run Django outside Docker)   optional
+* **mkcert** (for local trusted certs on Windows)   [https://github.com/FiloSottile/mkcert](https://github.com/FiloSottile/mkcert)
 
 On Windows you can install mkcert with Chocolatey:
 
@@ -71,15 +71,13 @@ This will create:
 * `certs/security-sandbox.test.pem`
 * `certs/security-sandbox.test-key.pem`
 
-> **IMPORTANT:** Do **not** commit these files. Add `certs/` to `.gitignore`.
-
 3. Verify mkcert CA folder (optional):
 
 ```bash
 mkcert -CAROOT
 ```
 
-4. Add hosts entry (Windows) — requires Administrator privileges:
+4. Add hosts entry (Windows) requires Administrator privileges:
 
 Edit `C:\Windows\System32\drivers\etc\hosts` and add:
 
@@ -107,10 +105,10 @@ A working `nginx.conf` example is provided in the repo (or see `nginx/nginx.conf
 
 Typical services used in development:
 
-* `db` — Postgres (volume-backed)
-* `mailhog` — SMTP capture for testing email flows
-* `backend` — Django app (built from `backend/Dockerfile`) — prefer `expose: "8000"` when using nginx; use `ports: - "8000:8000"` only in Mode A (quick dev)
-* `nginx` — TLS termination and reverse proxy (optional in Mode A)
+* `db`   Postgres (volume-backed)
+* `mailhog`   SMTP capture for testing email flows
+* `backend`   Django app (built from `backend/Dockerfile`)   prefer `expose: "8000"` when using nginx; use `ports: - "8000:8000"` only in Mode A (quick dev)
+* `nginx`   TLS termination and reverse proxy (optional in Mode A)
 
 Start services:
 
@@ -124,11 +122,11 @@ docker-compose up -d --build
 docker-compose logs -f backend
 ```
 
-**Note:** If you use Mode B (nginx TLS), you do **not** need to publish `8000` to the host — leave backend with `expose: ["8000"]`.
+**Note:** If you use Mode B (nginx TLS), you do **not** need to publish `8000` to the host   leave backend with `expose: ["8000"]`.
 
 ---
 
-## Frontend (Vite) — dev server
+## Frontend (Vite)   dev server
 
 Run from `frontend/` folder:
 
@@ -188,7 +186,7 @@ frontend/.env.local
 
 ## Workflows (Mode A vs Mode B)
 
-### Mode A — Fast local dev (no HTTPS)
+### Mode A   Fast local dev (no HTTPS)
 
 1. `docker-compose up --build` (ensure backend publishes `8000:8000` in compose)
 2. `cd frontend && npm run dev -- --host`
@@ -196,7 +194,7 @@ frontend/.env.local
 
 **Use when:** quick debugging, backend port needs to be accessible by browser.
 
-### Mode B — HTTPS dev (recommended)
+### Mode B   HTTPS dev (recommended)
 
 1. Create mkcert certs under `certs/` as above
 2. Add `127.0.0.1 security-sandbox.test` to hosts file
