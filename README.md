@@ -178,15 +178,11 @@ certs/
 .env.local
 frontend/.env.local
 ```
-
-* Commit `backend/.env.example` and `frontend/.env.example` as guidance for other developers.
-* If you use `VITE_API_BASE` for a quick local setup, **do not** commit `.env.local` with `VITE_API_BASE=http://localhost:8000` when you plan to use nginx/HTTPS.
-
 ---
 
 ## Workflows (Mode A vs Mode B)
 
-### Mode A   Fast local dev (no HTTPS)
+### Mode A Fast local dev (no HTTPS)
 
 1. `docker-compose up --build` (ensure backend publishes `8000:8000` in compose)
 2. `cd frontend && npm run dev -- --host`
@@ -194,7 +190,7 @@ frontend/.env.local
 
 **Use when:** quick debugging, backend port needs to be accessible by browser.
 
-### Mode B   HTTPS dev (recommended)
+### Mode B HTTPS dev (recommended)
 
 1. Create mkcert certs under `certs/` as above
 2. Add `127.0.0.1 security-sandbox.test` to hosts file
@@ -213,16 +209,6 @@ frontend/.env.local
 * `Blocked request. This host ("security-sandbox.test") is not allowed.` → add `allowedHosts: ['security-sandbox.test']` in `vite.config.ts` and restart Vite.
 * `CORS` errors → browser is calling `http://localhost:8000` directly. Remove absolute URLs and use relative paths or ensure requests pass through nginx.
 * Certificate not trusted → run `mkcert -install` and regenerate certs if needed; ensure you used the exact hostname in SANs.
-
----
-
-## Security best practices (dev)
-
-* Never commit private keys or `.env.local` files
-* Keep certs out of repo and describe generation steps in README
-* Prefer same-origin design with a single TLS entrypoint in dev to reduce CORS and cookie issues
-* Add a `SECURITY.md` describing how to report issues and avoid committing secrets
-
 ---
 
 ## Useful commands
@@ -267,20 +253,3 @@ __pycache__/
 docker-compose.override.yml
 ```
 
----
-
-## Contributing & notes
-
-If you find issues with the dev TLS configuration, or if you want to dockerize the frontend as well, file an issue or send a PR. Consider adding a `Makefile` or `scripts/dev-setup.sh` to automate mkcert generation and host-file edits (be careful editing system hosts requires admin rights).
-
-License: MIT
-
----
-
-If you want, I can also:
-
-* Add a ready-made `nginx/nginx.conf.example` to the repo
-* Create a `scripts/dev-setup.ps1` that runs mkcert and prints host instructions (Windows)
-* Draft a `SECURITY.md` file for responsible disclosure
-
-Tell me which extras you want and I’ll add them.
