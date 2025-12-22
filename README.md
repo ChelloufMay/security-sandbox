@@ -1,8 +1,6 @@
 # Security Sandbox
 
-**Local development README — security-sandbox**
-
-A compact guide to run and understand the *Security Sandbox* project (Django backend + Vite React frontend). It covers local HTTPS with **mkcert**, Docker services (Postgres, MailHog, backend, nginx), recommended workflows (dev quick vs HTTPS dev), folder structure, and security best-practices.
+Security Sandbox is a learning-oriented web application designed to simulate and demonstrate common security mechanisms similar to those used in Microsoft Azure, in a safe local environment. Its purpose is to help understand how modern security concepts—such as HTTPS/TLS termination, authentication flows, CSRF protection, role-based access control, secure cookies, email/SMS-based verification, and reverse-proxy architectures—work together in real-world systems. By combining a Dockerized Django backend, a Vite + React frontend, and an HTTPS entrypoint using mkcert and nginx, the project mirrors Azure-style setups (App Gateway / Front Door, managed identities, secure networking) while remaining fully local, transparent, and educational.
 
 ---
 
@@ -29,9 +27,7 @@ security-sandbox/
 ├─ certs/                   # local mkcert certs (gitignored)
 ├─ docker-compose.yml       # orchestrates db, mailhog, backend, nginx
 ├─ .env.example             # example env vars for backend/frontend
-├─ frontend/.env.example    # example frontend envs (VITE_* variables)
-├─ README.md                # this file
-└─ .gitignore
+└─ README.md                # this file
 ```
 
 ---
